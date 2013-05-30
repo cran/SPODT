@@ -1,0 +1,10 @@
+export("spodt",
+"spodt.tree",
+"spodt.map",
+"test.spodt"
+)
+
+useDynLib(SPODT)
+
+import(methods)
+importFrom("graphics",plot)
