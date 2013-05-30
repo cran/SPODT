@@ -35,15 +35,12 @@ Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (A
 \code{\link{spodt}}, \code{\link{spodt.map}}, \code{\link{test.spodt}} 
 }
 \examples{
-data(dataExample)
-#Example 1: split the area without covariable analysis
-sp<-spodt(dataExample,weight=TRUE,graft=0.05, rtwo.min = 0.0001)
-spodt.tree(sp)
-
-
-#Example 2: split the area with the quantitative covariate
-sp<-spodt(dataExample, weight=FALSE, ql.fact = NULL, qt.fact = "qt.fact",
-    graft=FALSE, level.max=7, min.parent=5, min.child=3, rtwo.min=0.0001)
+data(dataMALARIA)
+#Example : number of malaria episodes per child at each household,
+           #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
+sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
+          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
 spodt.tree(sp)
 
 

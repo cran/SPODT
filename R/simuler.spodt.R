@@ -4,7 +4,7 @@ function(d.sim, data, vqt, vql, weight, graft,
 {
     data$z <- d.sim
     
-    spodt.sim <- spodt(data, vqt, vql,
+    spodt.sim <- sp1(data, vqt, vql,
                        weight, graft,
                        level.max, min.parent, min.child, rtwo.min)
 

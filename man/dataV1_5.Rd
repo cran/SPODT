@@ -1,38 +1,32 @@
-\name{dataExample}
-\alias{dataExample}
+\name{dataV1_5}
+\alias{dataV1_5}
 
 \docType{data}
 \title{
 Example data file
 }
 \description{
-Simulated data for SPODT functions.
+Simulated data for SPODT functions. To assess the SpODT algorithm to detect a "V" shape situation: high values under a "V" shape border.
 }
-\usage{data(dataExample)}
+\usage{data(dataV1_5)}
 \format{
-  A data frame with 300 observations on the following 6 variables.
+  A data frame with 300 observations on the following 4 variables (300 locations).
   \describe{
-    \item{\code{loc}}{a numeric vector}
+    \item{\code{i}}{a numeric vector}
     \item{\code{x}}{a numeric vector}
     \item{\code{y}}{a numeric vector}
     \item{\code{z}}{a numeric vector}
-    \item{\code{qt.fact}}{a numeric vector}
-    \item{\code{ql.fact}}{a factor with levels \code{1} \code{2} \code{3} \code{4} \code{5}}
   }
 }
 \details{
 \itemize{
-  \item{\code{loc}}{: identification of each localization.
+  \item{\code{i}}{: identification of each localization.
 }
   \item{\code{x}}{: longitudinal coordinate.
 }
   \item{\code{y}}{: latitudinal coordinate.
 }
   \item{\code{z}}{: the dependant variable.
-}
-  \item{\code{ql.fact}}{: a quantitative variable to be split according to a non oblique algorithm.
-}
-  \item{\code{qt.fact}}{: a qualitative variable to be split according to a non oblique algorithm.
 }
 }
 }
@@ -45,11 +39,11 @@ Simulated data for SPODT functions.
 }
 }
 \examples{
-data(dataExample)
+data(dataV1_5)
 #Example : split the area without covariable analysis
-sp<-spodt(dataExample,weight=TRUE,graft=0.05)
+sp<-spodt(z~i+x+y, ~1, data=dataV1_5,weight=TRUE,graft=0.2)
 spodt.tree(sp)
-spodt.map(sp,dataExample$x,dataExample$y,map.col=TRUE)
+spodt.map(sp,dataV1_5$x,dataV1_5$y,map.col=TRUE)
 
 
 }

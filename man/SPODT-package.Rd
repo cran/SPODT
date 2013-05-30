@@ -21,7 +21,7 @@ The main functions are spodt(), that provides the spatial classification, spodt.
 \author{
 Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (Aix-Marseille University)
 
-Maintainer: <jean.gaudart@univ-amu.fr>
+Maintainer: Jean Gaudart <jean.gaudart@univ-amu.fr>
 
 }
 \references{
@@ -36,12 +36,15 @@ Maintainer: <jean.gaudart@univ-amu.fr>
 \keyword{package}
 
 \examples{
-data(dataExample)
-summary(dataExample)
-#Example : split the area without covariable analysis
-sp<-spodt(dataExample,weight=TRUE,graft=0.05)
+
+data(dataMALARIA)
+#Example : number of malaria episodes per child at each household,
+          #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
+sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
+          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
 spodt.tree(sp)
-spodt.map(sp,dataExample$x,dataExample$y,map.col=TRUE)
+spodt.map(sp,dataMALARIA$x,dataMALARIA$y,map.col=TRUE)
 
 #the warning "root is a leaf" tells that no split can be provided by the
     #spodt function according to the splitting parameters

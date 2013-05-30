@@ -7,14 +7,22 @@
 
 }
 \usage{
-test.spodt(R2.obs, data, rdist, par.rdist, nb.sim, qt.fact = NULL, ql.fact = NULL,
-           weight, graft, level.max, min.parent, min.child, rtwo.min)
+test.spodt(formula, cofactors, data, R2.obs, rdist, par.rdist, nb.sim,
+           weight=FALSE, graft=0, level.max=5, min.parent=10, min.child=5,
+           rtwo.min=0.001)
 }
 
 \arguments{
-  \item{R2.obs}{the \code{R2global} issued from the previous \code{spodt} final classification of the observed dataset. Specified as a numerical value between 0 and 1.
+  \item{formula}{
+a \link{formula}, with a response but no interaction terms. The right hand side should be location ID and geographic coordinates.
 }
-  \item{data}{a data frame containing the variable and presented in a specified format: first column for location id (loc), second and third column for geographic coordinates (x and y), 4th column for the dependant variable (z), and the following columns for covariates including time
+  \item{cofactors}{
+a \link{formula}, with a response but no interaction terms. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
+}
+  \item{data}{
+a data frame containing the variables.
+}
+  \item{R2.obs}{the \code{R2global} issued from the previous \code{spodt} final classification of the observed dataset. Specified as a numerical value between 0 and 1.
 }
   \item{rdist}{a description of the distribution of the dependent variable under the null hypothesis. This can be a character string naming a random generation of a specified distribution, such as \code{"rnorm"}(Gaussian distribution), \code{"rpois"} (Poisson distribution), \code{"rbinom"} (binomial distribution), \code{"runif"} (uniform distribution) ... .
 }
@@ -22,17 +30,11 @@ test.spodt(R2.obs, data, rdist, par.rdist, nb.sim, qt.fact = NULL, ql.fact = NUL
 }
   \item{nb.sim}{the number of simulation, specified as a positive integer.
 }
-  \item{ql.fact}{
-an optional list of quantitative variables to be split according to a non oblique algorithm. Should be \code{NULL} or specified as a character string. Time factor can be listed as a quantitative factor.
-}
-  \item{qt.fact}{
-an optional list of qualitative variables to be split according to a non oblique algorithm. Should be \code{NULL} or specified as a character string.
-}
   \item{weight}{
 logical value indicating whether the interclass variances should be weighted or not.
 }
   \item{graft}{
-if not equals to FALSE, a numerical value between 0 and 1 indicating the minimum improvement of \code{R2global} requires to grafted the final classes.
+if not equals to 0, a numerical value in ]0;1] indicating the minimal modification of \code{R2global} requires to grafted the final classes.
 }
   \item{level.max}{
 the maximal level of the regression tree above which the splitting algorithm is stopped.
@@ -64,40 +66,24 @@ The \code{test.spodt} function computes classification trees for simulated datas
 \seealso{\code{\link{spodt}}, \code{\link{spodt.tree}}, \code{\link{spodt.map}} 
 }
 \examples{
-#Example 1:
-data(dataExample)
-summary(dataExample)
-sp<-spodt(dataExample,weight=TRUE,graft=0.05, level.max=5, min.parent=10,
-    min.child=5, rtwo.min=0.001)
+data(dataMALARIA)
+#Example : number of malaria episodes per child at each household,
+          #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
+sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
+          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
+
 
 #to test the previous split using Monte-Carlo approach, and hypothesing a
-    #uniform distribution of the dependant variable through the area
-test.spodt(sp@R2, dataExample, "runif", c(nrow(dataExample),0,10), 5, weight=TRUE, graft=0.05,
-           level.max=5, min.parent=10, min.child=5, rtwo.min=0.001)
+    #Poisson distribution of the dependant variable through the area
+test.spodt(z~loc+x+y, ~1, data=dataMALARIA, sp@R2, "rpois",
+           c(length(dataMALARIA$loc),mean(dataMALARIA$z)), 9,
+		   graft=0.1, level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
 #
-#Example 2:
-#to simulate a dataset with 600 locations
-tnbObs <- 600
-tloc <- c(rep((10+tnbObs/3):11,2),(20+tnbObs/3+1):(20+2*tnbObs/3))
-tx <- runif(tnbObs/3, -1, 1)
-ty <- runif(tnbObs/3, -1, 1)
-tx <- c(tx,tx,tx)
-ty <- c(ty,ty,1/2*ty)
-tz <- runif(tnbObs, 0, 1)
-tz[which(tx < 0.5 & tx > 0 & ty < 0.5 & ty > 0)] <- 10
-tz[which((tx < -0.7  &  ty < -0.7))] <- 10
-tdata <- data.frame(tloc,tx,ty,tz)
-colnames(tdata)[1:4] <- c("loc", "x", "y", "z")
-summary(tdata)
-#to split the area:
-sp<-spodt(tdata,weight=TRUE,graft=0.05)
+
 #the warning "root is a leaf" tells that no split can be provided by the
     #spodt function according to the splitting parameters
-#
-#to test the previous split using Monte-Carlo approach, and hypothesing a
-    #uniform distribution of the dependant variable through the area
-test.spodt(sp@R2, tdata, "runif", c(tnbObs,0,10), 5, weight=TRUE, graft=0.05,
-           level.max=5, min.parent=10, min.child=5, rtwo.min=0.001)
+
 }
 \keyword{SPODT}
 \keyword{Spatial Oblique Decision Tree}

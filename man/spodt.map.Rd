@@ -38,11 +38,15 @@ Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (A
 }
 
 \examples{
-data(dataExample)
-#Example : split the area without covariable analysis
-sp<-spodt(dataExample,weight=TRUE,graft=0.05)
+data(dataMALARIA)
+#Example : number of malaria episodes per child at each household,
+          #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
+#split the area without covariable analysis
+sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
+          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
 
-spodt.map(sp,dataExample$x,dataExample$y,map.col=TRUE)
+spodt.map(sp,dataMALARIA$x,dataMALARIA$y,map.col=TRUE)
 
 
 }

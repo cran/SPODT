@@ -7,25 +7,25 @@ Spatial Oblique Decision Tree main function
 The \code{spodt} function provides a spatial partionning.
 }
 \usage{
-spodt(data, ql.fact = NULL, qt.fact = NULL, weight = FALSE, graft = FALSE,
+spodt(formula, cofactors, data, weight = FALSE, graft = 0,
       level.max = 5, min.parent = 10, min.child = 5, rtwo.min = 0.001)
 }
 
 \arguments{
+  \item{formula}{
+a \link{formula}, with a response but no interaction terms. The right hand side should be location ID and geographic coordinates.
+}
+  \item{cofactors}{
+a \link{formula}, with a response but no interaction terms. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
+}
   \item{data}{
-a data frame containing the variables and presented in a specified format: first column for location ID (loc), second and third column for geographic coordinates (x and y), 4th column for the dependant variable (z), and the following columns for covariates (V1 to Vk) including time (t)
-}
-  \item{ql.fact}{
-an optional list of quantitative variables to be split according to a non oblique algorithm. Should be \code{NULL} or specified as a character string. Time factor can be listed as a quantitative factor.
-}
-  \item{qt.fact}{
-an optional list of qualitative variables to be split according to a non oblique algorithm. Should be \code{NULL} or specified as a character string.
+a data frame containing the variables.
 }
   \item{weight}{
 logical value indicating whether the interclass variances should be weighted or not.
 }
   \item{graft}{
-if not equals to FALSE, a numerical value between 0 and 1 indicating the minimum improvement of \code{R2global} requires to grafted the final classes.
+if not equals to 0, a numerical value in ]0;1] indicating the minimal modification of \code{R2global} requires to grafted the final classes.
 }
   \item{level.max}{
 the maximal level of the regression tree above which the splitting algorithm is stopped.
@@ -59,15 +59,13 @@ Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (A
 \code{\link{spodt.tree}}, \code{\link{spodt.map}}, \code{\link{test.spodt}} 
 }
 \examples{
-data(dataExample)
-summary(dataExample)
-#Example 1: split the area without covariable analysis
-sp<-spodt(dataExample,weight=TRUE,graft=0.05)
-sp
-sp@R2
-#Example 2: split the area with the quantitative covariate
-sp<-spodt(dataExample, weight=FALSE, ql.fact = NULL, qt.fact = "qt.fact",
-    graft=FALSE, level.max=7, min.parent=5, min.child=3, rtwo.min=0.0001)
+data(dataMALARIA)
+summary(dataMALARIA)
+#Example : number of malaria episodes per child at each household,
+           #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
+sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
+          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
 sp
 sp@R2
 

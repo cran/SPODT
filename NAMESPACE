@@ -7,4 +7,6 @@ export("spodt",
 useDynLib(SPODT)
 
 import(methods)
-importFrom("graphics",plot)
+importFrom("graphics", plot)
+importFrom(stats, formula)
+importFrom("tree",tree)
