@@ -1,0 +1,26 @@
+citHeader("To cite SPODT in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{SPODT}: An {R} Package to Perform Spatial Partitioning",
+  author       = personList(as.person("Jean Gaudart"),
+                   as.person("Nathalie Graffeo"),
+                   as.person("Drissa Coulibaly"),
+                   as.person("Guillaume Barbet"),
+                   as.person("Stanislas Rebaudet"),
+                   as.person("Nadine Dessay"),
+                   as.person("Ogobara K. Doumbo"),
+                   as.person("Roch Giorgi")),
+  journal      = "Journal of Statistical Software",
+  year         = "2015",
+  volume       = "63",
+  number       = "16",
+  pages        = "1--23",
+  url          = "http://www.jstatsoft.org/v63/i16/",
+
+  textVersion  =
+  paste("Jean Gaudart, Nathalie Graffeo, Drissa Coulibaly, Guillaume Barbet, Stanislas Rebaudet, Nadine Dessay, Ogobara K. Doumbo, Roch Giorgi (2015).",
+        "SPODT: An R Package to Perform Spatial Partitioning.",
+        "Journal of Statistical Software, 63(16), 1-23.",
+        "URL http://www.jstatsoft.org/v63/i16/.")
+)
+
