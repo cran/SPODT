@@ -6,7 +6,7 @@
 Example data file
 }
 \description{
-Simulated data for SPODT functions. To assess the SpODT algorithm to detect a "V" shape situation: high values under a "V" shape border.
+Simulated data for SPODT functions. To assess the SpODT algorithm to detect a V-shape situation: high values under a V-shape border.
 }
 \usage{data(dataV1_5)}
 \format{
@@ -40,11 +40,14 @@ Simulated data for SPODT functions. To assess the SpODT algorithm to detect a "V
 }
 \examples{
 data(dataV1_5)
+dataset<-dataV1_5
+coordinates(dataset)<-c("x","y")
+#coordinates are planar ones
 #Example : split the area without covariable analysis
-sp<-spodt(z~i+x+y, ~1, data=dataV1_5,weight=TRUE,graft=0.2)
-spodt.tree(sp)
-spodt.map(sp,dataV1_5$x,dataV1_5$y,map.col=TRUE)
+sp<-spodt(dataset@data$z~1, dataset, weight=FALSE, graft=0.2)
 
-
+ssp<-spodtSpatialLines(sp,dataset)
+plot(ssp)
+points(dataset,cex=dataset@data$z)
 }
 \keyword{datasets}

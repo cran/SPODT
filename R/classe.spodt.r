@@ -29,8 +29,8 @@ setClass("vqt.spodt",
 
 setClass("spodt",
          representation(racine="virtual.spodt",
-                        R2="numeric", partition="vector", adj="matrix", cl.grf="matrix", sgmts.grf="matrix"),
+                        R2="numeric", partition="vector", adj="matrix", cl.grf="matrix", sgmts.grf="matrix", brd="matrix"),
          prototype(racine=new("f.spodt"),
-                   R2=0, partition=0, adj=matrix(0), cl.grf=matrix(ncol=3), sgmts.grf=matrix(ncol=4)),
+                   R2=0, partition=0, adj=matrix(0), cl.grf=matrix(ncol=3), sgmts.grf=matrix(ncol=4), brd=matrix(ncol=5)),
          contains="virtual.spodt")
          

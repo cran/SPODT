@@ -7,19 +7,16 @@ Spatial Oblique Decision Tree main function
 The \code{spodt} function provides a spatial partionning.
 }
 \usage{
-spodt(formula, cofactors, data, weight = FALSE, graft = 0,
+spodt(formula, data, weight = FALSE, graft = 0,
       level.max = 5, min.parent = 10, min.child = 5, rtwo.min = 0.001)
 }
 
 \arguments{
   \item{formula}{
-a \link{formula}, with a response but no interaction terms. The right hand side should be location ID and geographic coordinates.
-}
-  \item{cofactors}{
-a \link{formula}, with a response but no interaction terms. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
+a \link{formula}, with a response but no interaction terms. The left hand side has to contain the quantitative response variable. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
 }
   \item{data}{
-a data frame containing the variables.
+a \code{SpatialPointsDataFrame} containing the coordinates and the variables. \code{spodt} needs planar coordinates. Geographic coordinates have to be projected. Otherwise, euclidian coordinates can be used.
 }
   \item{weight}{
 logical value indicating whether the interclass variances should be weighted or not.
@@ -42,7 +39,7 @@ the minimal value of \code{R2} above which the node split is refused and algorit
 }
 
 \value{
-The spodt function computes an object of class spodt with the different components of the classification tree, i.e. i) at each step: the point locations within each class, the \code{R2} coefficients of the splitting line; ii) global results: the \code{R2global} (\code{object@R2}), the final partition (\code{object@partition}) including the graft results.
+The spodt function computes an object of class \code{spodt} with the different components of the classification tree, i.e. i) at each step: the point locations within each class, the \code{R2} coefficients of the splitting line; ii) global results: the \code{R2global} (\code{object@R2}), the final partition (\code{object@partition}) including the graft results.
 }
 \references{
 \itemize{
@@ -56,16 +53,26 @@ Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (A
 }
 
 \seealso{
-\code{\link{spodt.tree}}, \code{\link{spodt.map}}, \code{\link{test.spodt}} 
+\code{\link{spodt.tree}}, \code{\link{spodtSpatialLines}}, \code{\link{test.spodt}} 
 }
 \examples{
 data(dataMALARIA)
-summary(dataMALARIA)
 #Example : number of malaria episodes per child at each household,
-           #from November to December 2009, Bandiagara, Mali.
-#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
-sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
-          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
+          #from November to December 2009, Bandiagara, Mali.
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd[at]icermali.org
+coordinates(dataMALARIA)<-c("x","y")
+class(dataMALARIA)
+proj4string(dataMALARIA)<-"+proj=longlat +datum=WGS84 +ellps=WGS84"
+dataMALARIA<-spTransform(dataMALARIA, CRS("+proj=merc +datum=WGS84 +ellps=WGS84"))
+
+gr<-0.07   #graft parameter
+rtw<-0.01 #rtwo.min
+parm<-25  #min.parent
+childm<-2 #min.child
+lmx<-7 
+
+sp<-spodt(dataMALARIA@data[,2]~1, dataMALARIA, weight=TRUE, graft=gr, min.ch=childm,
+          min.parent=parm, level.max=lmx, rtwo.min=rtw)
 sp
 sp@R2
 

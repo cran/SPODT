@@ -3,24 +3,21 @@
 \title{Monte Carlo hypothesis test of the SPODT classification
 
 }
-\description{The \code{test.spodt} function provides Monte Carlo hypothesis test of the final classification issued from the \code{spodt} function. This function performs simulations of the specified null hypothesis and the classication of each simulated data set, using the same rules than the observed dataset classification.
+\description{The \code{test.spodt} function provides Monte Carlo hypothesis test of the final classification issued from the \code{spodt} function. This function performs simulations of the specified null hypothesis and the classification of each simulated data set, using the same rules than the observed dataset classification.
 
 }
 \usage{
-test.spodt(formula, cofactors, data, R2.obs, rdist, par.rdist, nb.sim,
-           weight=FALSE, graft=0, level.max=5, min.parent=10, min.child=5,
-           rtwo.min=0.001)
+test.spodt(formula, data, R2.obs,  rdist, par.rdist, nb.sim, 
+                   weight=FALSE, graft=0, level.max=5, min.parent=10, 
+				   min.child=5, rtwo.min=0.001)
 }
 
 \arguments{
   \item{formula}{
-a \link{formula}, with a response but no interaction terms. The right hand side should be location ID and geographic coordinates.
-}
-  \item{cofactors}{
-a \link{formula}, with a response but no interaction terms. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
+a \link{formula}, with a response but no interaction terms. The left hand side has to contain the quantitative response variable. The right hand side should contain the quantitative and qualitative variables to be split according to a non oblique algorithm. For single spatial analysis (with no cofactor) the right hand side should be ~1.
 }
   \item{data}{
-a data frame containing the variables.
+a \code{SpatialPointsDataFrame} containing the coordinates and the variables. \code{spodt} needs planar coordinates. Geographic coordinates have to be projected. Otherwise, euclidian coordinates can be used.
 }
   \item{R2.obs}{the \code{R2global} issued from the previous \code{spodt} final classification of the observed dataset. Specified as a numerical value between 0 and 1.
 }
@@ -63,23 +60,33 @@ The \code{test.spodt} function computes classification trees for simulated datas
 \author{Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (Aix-Marseille University)
 }
 
-\seealso{\code{\link{spodt}}, \code{\link{spodt.tree}}, \code{\link{spodt.map}} 
+\seealso{\code{\link{spodt}}, \code{\link{spodt.tree}}, \code{\link{spodtSpatialLines}} 
 }
 \examples{
 data(dataMALARIA)
 #Example : number of malaria episodes per child at each household,
           #from November to December 2009, Bandiagara, Mali.
-#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
-sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
-          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd[at]icermali.org
+coordinates(dataMALARIA)<-c("x","y")
+class(dataMALARIA)
+proj4string(dataMALARIA)<-"+proj=longlat +datum=WGS84 +ellps=WGS84"
+dataMALARIA<-spTransform(dataMALARIA, CRS("+proj=merc +datum=WGS84 +ellps=WGS84"))
 
+gr<-0.07   #graft parameter
+rtw<-0.01 #rtwo.min
+parm<-25  #min.parent
+childm<-2 #min.child
+lmx<-7 
+
+sp<-spodt(dataMALARIA@data[,2]~1, dataMALARIA, weight=TRUE, graft=gr, min.ch=childm,
+          min.parent=parm, level.max=lmx, rtwo.min=rtw)
 
 #to test the previous split using Monte-Carlo approach, and hypothesing a
     #Poisson distribution of the dependant variable through the area
-test.spodt(z~loc+x+y, ~1, data=dataMALARIA, sp@R2, "rpois",
-           c(length(dataMALARIA$loc),mean(dataMALARIA$z)), 9,
-		   graft=0.1, level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
-#
+test.spodt(dataMALARIA@data[,2]~1, dataMALARIA, sp@R2, "rpois",
+           c(length(dataMALARIA@data$loc),mean(dataMALARIA@data$z)), 10,
+		   weight=TRUE, graft=gr, level.max=lmx, min.parent=parm,
+		   min.child=childm,rtwo.min=rtw)
 
 #the warning "root is a leaf" tells that no split can be provided by the
     #spodt function according to the splitting parameters

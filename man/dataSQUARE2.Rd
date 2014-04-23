@@ -40,11 +40,15 @@ Simulated data for SPODT functions. To assess the SpODT algorithm to detect a ro
 }
 \examples{
 data(dataSQUARE2)
+dataset<-dataSQUARE2
+coordinates(dataset)<-c("x","y")
+#coordinates are planar ones
 #Example : split the area without covariable analysis
-sp<-spodt(z~i+x+y, ~1, data=dataSQUARE2,weight=TRUE,graft=0.2)
-spodt.tree(sp)
-spodt.map(sp,dataSQUARE2$x,dataSQUARE2$y,map.col=TRUE)
+sp<-spodt(dataset@data$z~1, dataset, weight=FALSE, graft=0.2)
 
+ssp<-spodtSpatialLines(sp,dataset)
+plot(ssp)
+points(dataset,cex=dataset@data$z)
 
 }
 \keyword{datasets}

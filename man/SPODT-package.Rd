@@ -12,11 +12,11 @@ SPODT is a spatial partitioning method based on oblique decision trees, in order
 \tabular{ll}{
 Package: \tab SPODT\cr
 Type: \tab Package\cr
-Version: \tab 0.6.32\cr
-Date: \tab 2013-05-30\cr
+Version: \tab 0.9\cr
+Date: \tab 2014-04-23\cr
 License: GPL(>=2)
 }
-The main functions are spodt(), that provides the spatial classification, spodt.tree(), that provides the partition tree, spodt.map(), that provides the final spatial classification, and test.spodt(), that provides a Monte Carlo test of the final spatial classification.
+The main functions are spodt() that provides the spatial classification, spodt.tree() that provides the partition tree, spodtSpatialLines(), an object of SpatialLines class that contains the final spatial classification, and test.spodt() that provides a Monte Carlo test of the final spatial classification.
 }
 \author{
 Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (Aix-Marseille University)
@@ -36,15 +36,34 @@ Maintainer: Jean Gaudart <jean.gaudart@univ-amu.fr>
 \keyword{package}
 
 \examples{
-
 data(dataMALARIA)
 #Example : number of malaria episodes per child at each household,
           #from November to December 2009, Bandiagara, Mali.
-#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd@icermali.org
-sp<-spodt(z~loc+x+y, ~1, data=dataMALARIA, weight=TRUE, graft=0.1,
-          level.max=7, min.parent=25, min.child=2, rtwo.min=0.01)
+#Copyright: Pr Ogobara Doumbo, MRTC, Bamako, Mali. email: okd[at]icermali.org
+coordinates(dataMALARIA)<-c("x","y")
+class(dataMALARIA)
+proj4string(dataMALARIA)<-"+proj=longlat +datum=WGS84 +ellps=WGS84"
+dataMALARIA<-spTransform(dataMALARIA, CRS("+proj=merc +datum=WGS84 +ellps=WGS84"))
+
+gr<-0.07   #graft parameter
+rtw<-0.01 #rtwo.min
+parm<-25  #min.parent
+childm<-2 #min.child
+lmx<-7 
+
+sp<-spodt(dataMALARIA@data[,2]~1, dataMALARIA, weight=TRUE, graft=gr, min.ch=childm,
+          min.parent=parm, level.max=lmx, rtwo.min=rtw)
+		  
 spodt.tree(sp)
-spodt.map(sp,dataMALARIA$x,dataMALARIA$y,map.col=TRUE)
+
+ssp<-spodtSpatialLines(sp,dataMALARIA)
+plot(ssp)
+points(dataMALARIA,cex=log(dataMALARIA@data$z*10))
+
+#test.spodt(dataMALARIA@data[,2]~1, dataMALARIA, sp@R2, "rpois",
+#           c(length(dataMALARIA@data$loc),mean(dataMALARIA@data$z)), 10,
+#		   weight=TRUE, graft=gr, level.max=lmx, min.parent=parm,
+#		   min.child=childm,rtwo.min=rtw)
 
 #the warning "root is a leaf" tells that no split can be provided by the
     #spodt function according to the splitting parameters

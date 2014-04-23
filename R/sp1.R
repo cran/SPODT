@@ -1,10 +1,7 @@
 sp1 <-
-function(data,
-                  ql.fact=NULL, qt.fact=NULL, weight=FALSE, graft=FALSE,
+function(data,ql.fact=NULL, qt.fact=NULL, weight=FALSE, graft=FALSE,
                   level.max=5, min.parent=10, min.child=5, rtwo.min=0.001)
 {   
-
-    #dimnames(data)[[2]][1:4]<-c("loc","x","y","z")
     ponderer<-weight
     greffer<-graft
     nv.max<-level.max
@@ -56,7 +53,7 @@ function(data,
     res <- classe.adj(res$bord)
 
     arbre@adj <- res$adj    
-
+    arbre@brd <- as.matrix(res$bord)
 
     if (greffer)
     {
@@ -69,7 +66,9 @@ function(data,
 
         
         res <- realiser.greffe(data, bord, arbre@partition, ponderer, var.exp.min, arbre@adj)
-
+        if (! is.null(res$bord)){
+            arbre@brd <- as.matrix(res$bord)
+        }
         if (!res$grf)
         {
             arbre@R2 <- R2.global(data$z, arbre@partition)

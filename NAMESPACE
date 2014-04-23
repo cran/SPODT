@@ -1,12 +1,12 @@
 export("spodt",
 "spodt.tree",
-"spodt.map",
+"spodtSpatialLines",
 "test.spodt"
 )
 
 useDynLib(SPODT)
 
 import(methods)
-importFrom("graphics", plot)
-importFrom(stats, formula)
-importFrom("tree",tree)
+import(sp)
+import(rgdal)
+import(tree)

@@ -40,11 +40,15 @@ Simulated data for SPODT functions. To assess the SpODT algorithm to detect a ba
 }
 \examples{
 data(dataBALL0)
+dataset<-dataBALL0
+coordinates(dataset)<-c("x","y")
+#coordinates are planar ones
 #Example : split the area without covariable analysis
-sp<-spodt(z~i+x+y, ~1, data=dataBALL0,weight=TRUE,graft=0.2)
+sp<-spodt(dataset@data$z~1, dataset, weight=FALSE, graft=0.2)
 
-spodt.map(sp,dataBALL0$x,dataBALL0$y,map.col=TRUE)
-
+ssp<-spodtSpatialLines(sp,dataset)
+plot(ssp)
+points(dataset,cex=dataset@data$z)
 
 }
 \keyword{datasets}

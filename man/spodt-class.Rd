@@ -13,10 +13,11 @@ This class of objects is returned by the \code{"spodt"} function to represent a 
   \describe{
     \item{\code{racine}:}{Object of class \code{"virtual.spodt"} the root of the tree }
     \item{\code{R2}:}{Object of class \code{"numeric"} the explained variance coefficient issued from a split }
-    \item{\code{partition}:}{Object of class \code{"vector"} the final partition issued from the \code{"spodt"} function}
+    \item{\code{partition}:}{Object of class \code{"vector"} the final partition issued from the \code{"spodt"} function }
     \item{\code{adj}:}{Object of class \code{"matrix"} adjacence matrix between spatial classes in a partition. Used for the grafting function }
     \item{\code{cl.grf}:}{Object of class \code{"matrix"} class matrix after grafting }
-    \item{\code{sgmts.grf}:}{Object of class \code{"matrix"} border definition of each classes }
+    \item{\code{sgmts.grf}:}{Object of class \code{"matrix"} border of each class to be grafted }
+	\item{\code{brd}:}{Object of class \code{"matrix"} all spatial borders }
   }
 }
 
@@ -33,7 +34,7 @@ Jean Gaudart, Nathalie Graffeo, Guillaume Barbet, Bernard Fichet, Roch Giorgi (A
 
 
 \seealso{
-\code{\link{spodt}}, \code{\link{spodt.tree}}, \code{\link{spodt.map}}, \code{\link{test.spodt}}
+\code{\link{spodt}}, \code{\link{spodt.tree}}, \code{\link{spodtSpatialLines}}, \code{\link{test.spodt}}
 }
 \examples{
 showClass("spodt")

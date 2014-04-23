@@ -6,7 +6,7 @@
 Example data file
 }
 \description{
-Simulated data for SPODT functions. To assess the SpODT algorithm to detect 6 situations evoluting through time: rotated square cluster (2 situations), "no cluster" (2 situations), and "V" border shapes (2 situations).
+Simulated data for SPODT functions. To assess the SpODT algorithm to detect 6 situations evoluting through time: rotated square cluster (2 situations), no cluster (2 situations), and V-border shapes (2 situations).
 }
 \usage{data(dataCOV)}
 \format{
@@ -45,12 +45,14 @@ Simulated data for SPODT functions. To assess the SpODT algorithm to detect 6 si
 }
 }
 \examples{
-data(dataCOV)
-#Example : split the area with covariable analysis
-sp<-spodt(z~i+x+y, ~V1, data=dataCOV,weight=TRUE,graft=0,
-          min.ch=5, min.parent=10, level.max=3, rtwo.min=0.1)
-spodt.tree(sp)
-
+#data(dataCOV)
+#dataset<-dataCOV
+#coordinates(dataset)<-c("x","y")
+#coordinates are planar ones
+#Example : split the area with a covariable analysis
+#sp<-spodt(dataset@data$z~V1, dataset, weight=FALSE, graft=0, 
+#         min.ch=150, min.parent=200, level.max=3, rtwo.min=0.15)
+#spodt.tree(sp)
 
 }
 \keyword{datasets}
